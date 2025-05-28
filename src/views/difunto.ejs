@@ -43,12 +43,14 @@
             placeholder="Nombre del difunto"
             class="form-control mb-2"
             autofocus
+            oninput="this.value = this.value.toUpperCase();"
           />
           <input
             type="text"
             name="seccion"
             placeholder="Sección del panteon"
             class="form-control mb-2"
+            oninput="this.value = this.value.toUpperCase();"
           />
           <input
             type="date"

@@ -11,6 +11,7 @@
             value="<%= difunto.name %>"
             placeholder="Nombre"
             class="form-control mb-3"
+            oninput="this.value = this.value.toUpperCase();"
             autofocus
           />
           <input
@@ -19,6 +20,7 @@
             value="<%= difunto.seccion%>"
             placeholder="Seccion"
             class="form-control mb-3"
+            oninput="this.value = this.value.toUpperCase();"
           />
           <input
             type="date"
