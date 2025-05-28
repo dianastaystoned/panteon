@@ -42,7 +42,7 @@ export const exportData = async (req, res) => {
   const worksheet = workbook.addWorksheet('Difuntos');
   worksheet.columns = [
     { header: 'ID', key: 'id' },
-    { header: 'Nombre', key: 'nombre' },
+    { header: 'Nombre', key: 'name' },
     { header: 'Sección', key: 'seccion' },
     { header: 'Fecha', key: 'fecha' }
   ];
