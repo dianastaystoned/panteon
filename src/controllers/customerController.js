@@ -44,7 +44,8 @@ export const exportData = async (req, res) => {
     { header: 'ID', key: 'id' },
     { header: 'Nombre', key: 'name' },
     { header: 'Sección', key: 'seccion' },
-    { header: 'Fecha', key: 'fecha' }
+    { header: 'Fecha', key: 'fecha' },
+    { header: 'Gabetas', key: 'pisos' }
   ];
 
   worksheet.addRows(rows);

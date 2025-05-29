@@ -10,6 +10,7 @@
             <td>Nombre</td>
             <td>Seccion</td>
             <td>Fecha</td>
+            <td>Pisos</td>
             <td>Acciones</td>
           </tr>
         </thead>
@@ -21,6 +22,7 @@
             <td style="white-space: normal; word-wrap: break-word; max-width: 150px;"><%= difunto[i].name %></td>
             <td><%= difunto[i].seccion %></td>
             <td><%= difunto[i].fecha %></td>
+            <td><%= difunto[i].pisos %></td>
             <td class="d-flex gap-2">
               <a href="/update/<%= difunto[i].id %>" class="btn btn-info">
                 Editar
@@ -58,6 +60,13 @@
             name="fecha"
             placeholder="Fecha de defunción"
             class="form-control mb-2"
+          />
+          <input
+            type="number"
+            name="pisos"
+            value="<%= difunto.pisos%>"
+            placeholder="Número de gabetas"
+            class="form-control mb-3"
           />
           <button type="submit" class="btn btn-success">Guardar difunto</button>
           <a href="/export-excel" class="btn btn-info">
