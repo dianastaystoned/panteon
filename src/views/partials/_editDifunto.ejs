@@ -1,0 +1,47 @@
+<div id="modaledit" class="modal">
+    <div class="modal-content">
+      <h2 class="title" id="modalTitle">Editar registro de <%= difunto.name %></h2>
+      <span class="close-btn" id="closeModalEdit">&times;</span>
+  
+      <!-- SOLO un form -->
+      <form id="editForm" action="/update/<%= difunto.id %>" method="POST" class="form-grid">
+        <div class="input-field">
+          <input type="text" name="name" value="<%= difunto.name %>"  />
+          <i class="uil uil-user icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <input type="text" name="seccion" value="<%= difunto.seccion %>" />
+          <i class="uil uil-map-marker icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <input type="text" name="fecha" value="<%= difunto.fecha %>" />
+          <i class="uil uil-calendar-alt icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <input type="number" name="pisos" value="<%= difunto.pisos %>" />
+          <i class="uil uil-layers icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <input type="number" name="num" value="<%= difunto.num %>" />
+          <i class="uil uil-history icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <label for="">Panteón</label>
+          <select name="panteon" required>
+            <option value="VIEJO">Panteón viejo</option>
+            <option value="NUEVO">Panteón nuevo</option>
+          </select>
+        </div>
+  
+        <!-- Botón ocupa todo el ancho de la grid --> <br>
+        <div class="input-field button full">
+          <input type="submit" value="Guardar cambios" />
+        </div>
+      </form>
+    </div>
+  </div>

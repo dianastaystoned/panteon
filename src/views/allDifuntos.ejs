@@ -26,35 +26,35 @@
                   <span class="data-title">N. gabeta</span>
                   <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
                     %>
-                    <span class="data-list"><%= difunto[i].id %></span>
+                    <span class="data-list" data-id="<%= difunto[i].id %>"><%= difunto[i].id %></span>
                   <% } %> <% } %>
               </div>
               <div class="data email">
                 <span class="data-title">Nombre del difunto</span>
                   <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
                     %>
-                    <span class="data-list nombre"><%= difunto[i].name %></span>
+                    <span class="data-list nombre" data-id="<%= difunto[i].id %>"><%= difunto[i].name %></span>
                   <% } %> <% } %>
               </div>            
               <div class="data joined">
                   <span class="data-title">Sección</span>
                   <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
                     %>
-                    <span class="data-list seccion"><%= difunto[i].seccion %></span>
+                    <span class="data-list seccion" data-id="<%= difunto[i].id %>"><%= difunto[i].seccion %></span>
                   <% } %> <% } %>
               </div>
               <div class="data floors">
                 <span class="data-title">Pisos</span>
                 <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
                   %>
-                  <span class="data-list"><%= difunto[i].pisos %></span>
+                  <span class="data-list" data-id="<%= difunto[i].id %>"><%= difunto[i].pisos %></span>
                 <% } %> <% } %>
               </div>
               <div class="data type">
                   <span class="data-title">N. anterior</span>
                   <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
                     %>
-                    <span class="data-list num"><%= difunto[i].num %></span>
+                    <span class="data-list num" data-id="<%= difunto[i].id %>"><%= difunto[i].num %></span>
                   <% } %> <% } %>
               </div>
               
@@ -62,7 +62,7 @@
                   <span class="data-title">Panteón</span>
                   <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
                     %>
-                    <span class="data-list panteon"><%= difunto[i].panteon %></span>
+                    <span class="data-list panteon" data-id="<%= difunto[i].id %>"><%= difunto[i].panteon %></span>
                   <% } %> <% } %>
               </div>
 
@@ -71,5 +71,6 @@
       </div>
   </div>
 </section>
+<%- include("partials/_editDifunto") %>
 <%- include("partials/_createDifuntos") %>
 <%- include("partials/_footer") %>

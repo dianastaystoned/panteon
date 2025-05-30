@@ -44,6 +44,53 @@ closeModalBtn.addEventListener("click", () => {
   modal.classList.remove("show");
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const modaledit = document.getElementById("modaledit");
+  const editForm = document.getElementById("editForm");
+
+  const closeModalEdit = document.getElementById("closeModalEdit");
+  closeModalEdit.addEventListener("click", () => {
+    modaledit.classList.remove("show");
+  });
+
+
+  document.querySelectorAll(".data-list").forEach((el) => {
+    el.addEventListener("dblclick", async () => {
+      const id = el.getAttribute("data-id");
+      if (!id) {
+        alert("No hay ID asignado a este elemento.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/difunto/${id}`);
+        if (!res.ok) throw new Error("No se pudo obtener el registro");
+
+        const difunto = await res.json();
+
+        // Actualizar título modal
+        document.getElementById("modalTitle").textContent = `Editar registro de ${difunto.name}`;
+
+        // Llenar formulario
+        editForm.action = `/update/${difunto.id}`;
+        console.log("Datos recibidos:", difunto);
+        editForm.name.value = difunto.name || '';
+        editForm.seccion.value = difunto.seccion || '';
+        editForm.fecha.value = difunto.fecha || '';
+        editForm.panteon.value = difunto.panteon || '';
+        editForm.pisos.value = difunto.pisos !== null && difunto.pisos !== undefined ? difunto.pisos : '';
+        editForm.num.value = difunto.num !== null && difunto.num !== undefined ? difunto.num : '';
+
+
+        // Mostrar modal
+        modaledit.classList.add("show");
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  });
+
+});
   </script>
   
 </body>

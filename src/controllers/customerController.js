@@ -31,11 +31,24 @@ export const createDifunto = async (req, res) => {
 
 export const editDifunto = async (req, res) => {
   const { id } = req.params;
-  const [result] = await pool.query("SELECT * FROM difunto WHERE id = ?", [
-    id,
-  ]);
-  res.render("difunto_edit", { difunto: result[0] });
+  const [result] = await pool.query("SELECT * FROM difunto WHERE id = ?", [id]);
+
+  if (result.length === 0) {
+    return res.status(404).json({ message: "No encontrado" });
+  }
+
+  const difunto = {
+    id: result[0].id,
+    name: result[0].name,
+    seccion: result[0].seccion,
+    fecha: result[0].fecha,
+    pisos: result[0].pisos,
+    num: result[0].num,
+    panteon: result[0].panteon
+  };
+  res.json(difunto);
 };
+
 
 export const updateDifunto = async (req, res) => {
   const { id } = req.params;

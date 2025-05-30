@@ -12,7 +12,7 @@ const router = Router();
 
 router.get("/", renderDifunto);
 router.post("/add", createDifunto);
-router.get("/update/:id", editDifunto);
+router.get("/api/difunto/:id", editDifunto);
 router.post("/update/:id", updateDifunto);
 router.get("/delete/:id", deleteDifunto);
 router.get("/export-excel", exportData)
