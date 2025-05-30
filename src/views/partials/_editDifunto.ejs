@@ -6,12 +6,12 @@
       <!-- SOLO un form -->
       <form id="editForm" action="/update/<%= difunto.id %>" method="POST" class="form-grid">
         <div class="input-field">
-          <input type="text" name="name" value="<%= difunto.name %>"  />
+          <input type="text" name="name" value="<%= difunto.name %>"  oninput="this.value = this.value.toUpperCase();"/>
           <i class="uil uil-user icon"></i>
         </div>
   
         <div class="input-field">
-          <input type="text" name="seccion" value="<%= difunto.seccion %>" />
+          <input type="text" name="seccion" value="<%= difunto.seccion %>" oninput="this.value = this.value.toUpperCase();"/>
           <i class="uil uil-map-marker icon"></i>
         </div>
   
