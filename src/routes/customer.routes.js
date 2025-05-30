@@ -1,19 +1,21 @@
 import { Router } from "express";
 import {
-  createCustomers,
-  deleteCustomer,
-  editCustomer,
-  renderCustomers,
-  updateCustomer,
+  createDifunto,
+  deleteDifunto,
+  editDifunto,
+  renderDifunto,
+  updateDifunto,
   exportData,
+  allDifuntos
 } from "../controllers/customerController.js";
 const router = Router();
 
-router.get("/", renderCustomers);
-router.post("/add", createCustomers);
-router.get("/update/:id", editCustomer);
-router.post("/update/:id", updateCustomer);
-router.get("/delete/:id", deleteCustomer);
+router.get("/", renderDifunto);
+router.post("/add", createDifunto);
+router.get("/update/:id", editDifunto);
+router.post("/update/:id", updateDifunto);
+router.get("/delete/:id", deleteDifunto);
 router.get("/export-excel", exportData)
+router.get("/all", allDifuntos)
 
 export default router;

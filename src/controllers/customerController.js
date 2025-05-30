@@ -1,18 +1,35 @@
 import { pool } from "../db.js";
 import ExcelJS from 'exceljs';
 
-export const renderCustomers = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM difunto");
-  res.render("difunto", { difunto: rows });
+export const renderDifunto = async (req, res) => {
+  const [rows] = await pool.query("SELECT * FROM difunto ORDER BY id DESC LIMIT 10");
+  const [[{allCement}]] = await pool.query("SELECT COUNT(*) AS allCement FROM difunto");
+  const [[{oldCement}]] = await pool.query("SELECT COUNT(*) AS oldCement FROM difunto WHERE panteon = 'VIEJO';");
+  const [[{newCement}]] = await pool.query("SELECT COUNT(*) AS newCement FROM difunto WHERE panteon = 'NUEVO';");
+  res.render("difunto", { difunto: rows, allCement, oldCement, newCement });
 };
 
-export const createCustomers = async (req, res) => {
-  const newDifunto = req.body;
-  await pool.query("INSERT INTO difunto set ?", [newDifunto]);
-  res.redirect("/");
+export const createDifunto = async (req, res) => {
+  const { name, seccion, fecha, pisos, num, panteon } = req.body;
+
+  // Convertir a 0 si está vacío
+  const pisosValue = pisos === '' ? 0 : parseInt(pisos);
+  const numValue = num === '' ? 0 : parseInt(num);
+
+  await pool.query('INSERT INTO difunto SET ?', {
+    name,
+    seccion,
+    fecha,
+    pisos: pisosValue,
+    num: numValue,
+    panteon
+  });
+
+  res.redirect('/');
 };
 
-export const editCustomer = async (req, res) => {
+
+export const editDifunto = async (req, res) => {
   const { id } = req.params;
   const [result] = await pool.query("SELECT * FROM difunto WHERE id = ?", [
     id,
@@ -20,14 +37,14 @@ export const editCustomer = async (req, res) => {
   res.render("difunto_edit", { difunto: result[0] });
 };
 
-export const updateCustomer = async (req, res) => {
+export const updateDifunto = async (req, res) => {
   const { id } = req.params;
   const newCustomer = req.body;
   await pool.query("UPDATE difunto set ? WHERE id = ?", [newCustomer, id]);
-  res.redirect("/");
+  res.redirect("/all");
 };
 
-export const deleteCustomer = async (req, res) => {
+export const deleteDifunto = async (req, res) => {
   const { id } = req.params;
   const result = await pool.query("DELETE FROM difunto WHERE id = ?", [id]);
   if (result.affectedRows === 1) {
@@ -41,11 +58,13 @@ export const exportData = async (req, res) => {
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('Difuntos');
   worksheet.columns = [
-    { header: 'ID', key: 'id' },
+    { header: 'N. de gabeta actual', key: 'id' },
     { header: 'Nombre', key: 'name' },
     { header: 'Sección', key: 'seccion' },
     { header: 'Fecha', key: 'fecha' },
-    { header: 'Gabetas', key: 'pisos' }
+    { header: 'Gabetas en el mismo piso', key: 'pisos' },
+    { header: 'N. de gabeta anterior', key: 'num' },
+    { header: 'Panteón al que pertenece', key: 'panteon' }
   ];
 
   worksheet.addRows(rows);
@@ -56,3 +75,8 @@ export const exportData = async (req, res) => {
   await workbook.xlsx.write(res);
   res.end();
 }
+
+export const allDifuntos = async (req, res) => {
+  const [rows] = await pool.query("SELECT * FROM difunto");
+  res.render("allDifuntos", { difunto: rows });
+};

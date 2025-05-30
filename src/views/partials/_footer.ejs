@@ -1,3 +1,50 @@
+<script>
+    document.addEventListener("keyup", (e) => {
+  if (e.target.matches("#buscador")) {
+    if (e.key === "Escape") e.target.value = "";
 
+    const search = e.target.value.toUpperCase();
+
+    const nombres = document.querySelectorAll(".email .nombre");
+
+    nombres.forEach((nombre, index) => {
+      const seccion = document.querySelectorAll(".joined .seccion")[index].textContent.toUpperCase();
+      const panteon = document.querySelectorAll(".status .panteon")[index].textContent.toUpperCase();
+      const gabeta = document.querySelectorAll(".names .data-list")[index].textContent.toUpperCase();
+      const num = document.querySelectorAll(".type .num")[index].textContent.toUpperCase();
+
+      const coincide =
+        nombre.textContent.toUpperCase().includes(search) ||
+        seccion.includes(search) ||
+        panteon.includes(search) ||
+        gabeta.includes(search) ||
+        num.includes(search);
+
+      // Mostrar u ocultar los datos en todas las columnas
+      document.querySelectorAll(".names .data-list")[index].style.display = coincide ? "" : "none";
+      document.querySelectorAll(".email .nombre")[index].style.display = coincide ? "" : "none";
+      document.querySelectorAll(".joined .seccion")[index].style.display = coincide ? "" : "none";
+      document.querySelectorAll(".floors .data-list")[index].style.display = coincide ? "" : "none";
+      document.querySelectorAll(".type .num")[index].style.display = coincide ? "" : "none";
+      document.querySelectorAll(".status .panteon")[index].style.display = coincide ? "" : "none";
+    });
+  }
+});
+
+const openModalBtn = document.getElementById("openModal");
+const modal = document.getElementById("modal");
+const closeModalBtn = document.getElementById("closeModal");
+
+openModalBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  modal.classList.add("show");
+});
+
+closeModalBtn.addEventListener("click", () => {
+  modal.classList.remove("show");
+});
+
+  </script>
+  
 </body>
 </html>

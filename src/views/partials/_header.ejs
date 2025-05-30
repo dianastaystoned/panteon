@@ -5,14 +5,58 @@
     <title>Panteon Municipal</title>
     <!-- NAVIGATION -->
     <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
-    <link rel="stylesheet" href="/styles/index.css" />
+    <!----===== Iconscout CSS ===== -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <link rel="stylesheet" href="/styles/style.css" />
+
+    <script src="/js/script.js"></script>
   </head>
   <body>
     <!-- navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand" href="/">Panteon Municipal</a>
+    <nav>
+      <div class="logo-name">
+          <div class="logo-image">
+              <img src="images/logo.png" alt="">
+          </div>
+
+          <span class="logo_name">Panteón</span>
       </div>
-    </nav>
+
+      <div class="menu-items">
+          <ul class="nav-links">
+              <li><a href="/">
+                  <i class="uil uil-estate"></i>
+                  <span class="link-name">Inicio</span>
+              </a></li>
+              <li><a href="" id="openModal">
+                  <i class="uil uil-plus"></i>
+                  <span class="link-name">Agregar registros</span>
+              </a></li>
+              <li><a href="/all">
+                  <i class="uil uil-file-search-alt"></i>
+                  <span class="link-name">Ver registros</span>
+              </a></li>
+              <li><a href="/export-excel">
+                <i class="uil uil-file-export"></i>
+                <span class="link-name">Exportar a excel</span>
+            </a></li>
+          </ul>
+          
+          <ul class="logout-mode">
+
+              <!-- <li class="mode">
+                  <a href="#">
+                      <i class="uil uil-moon"></i>
+                  <span class="link-name">Dark Mode</span>
+              </a>
+
+              <div class="mode-toggle">
+                <span class="switch"></span>
+              </div> -->
+          </li>
+          </ul>
+      </div>
+  </nav>
   </body>
 </html>

@@ -1,0 +1,75 @@
+<%- include("partials/_header") %>
+
+<section class="dashboard">
+  <div class="top">
+      <i class="uil uil- sidebar-toggle"></i>
+
+       <div class="search-box">
+          <i class="uil uil-search"></i>
+          <input type="text" name="buscador" id="buscador" placeholder="Busca por nombre aquí..." autofocus
+          oninput="this.value = this.value.toUpperCase();">
+       </div>
+      
+      <img src="images/profile.jpg" alt="">
+  </div>
+
+  <div class="dash-content">
+
+      <div class="activity">
+          <div class="title">
+              <i class="uil uil-file-alt"></i>
+              <span class="text">Todos los registros</span>
+          </div>
+
+          <div class="activity-data">
+              <div class="data names">
+                  <span class="data-title">N. gabeta</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list"><%= difunto[i].id %></span>
+                  <% } %> <% } %>
+              </div>
+              <div class="data email">
+                <span class="data-title">Nombre del difunto</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list nombre"><%= difunto[i].name %></span>
+                  <% } %> <% } %>
+              </div>            
+              <div class="data joined">
+                  <span class="data-title">Sección</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list seccion"><%= difunto[i].seccion %></span>
+                  <% } %> <% } %>
+              </div>
+              <div class="data floors">
+                <span class="data-title">Pisos</span>
+                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                  %>
+                  <span class="data-list"><%= difunto[i].pisos %></span>
+                <% } %> <% } %>
+              </div>
+              <div class="data type">
+                  <span class="data-title">N. anterior</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list num"><%= difunto[i].num %></span>
+                  <% } %> <% } %>
+              </div>
+              
+              <div class="data status">
+                  <span class="data-title">Panteón</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list panteon"><%= difunto[i].panteon %></span>
+                  <% } %> <% } %>
+              </div>
+
+          </div>
+          
+      </div>
+  </div>
+</section>
+<%- include("partials/_createDifuntos") %>
+<%- include("partials/_footer") %>

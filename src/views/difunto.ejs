@@ -1,6 +1,6 @@
 <%- include("partials/_header") %>
 
-<div class="container mt-5">
+<!-- <div class="container mt-5">
   <div class="row gx-4">
     <div class="col-md-7">
       <table class="table table-sm table-dark table-responsive table-striped table-hover">
@@ -76,6 +76,93 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
+<section class="dashboard">
+  <div class="top">
+  </div>
 
+  <div class="dash-content">
+      <div class="overview">
+          <div class="title">
+              <i class="uil uil-tachometer-fast-alt"></i>
+              <span class="text">Inicio</span>
+          </div>
+
+          <div class="boxes">
+              <div class="box box1">
+                  <i class="uil uil-"></i>
+                  <span class="text">Total de gabetas</span>
+                  <span class="number"><%= allCement %></span>
+              </div>
+              <div class="box box2">
+                  <i class="uil uil-"></i>
+                  <span class="text">Panteón nuevo</span>
+                  <span class="number"><%= newCement %></span>
+              </div>
+              <div class="box box3">
+                  <i class="uil uil-"></i>
+                  <span class="text">Panteón viejo</span>
+                  <span class="number"><%= oldCement %></span>
+              </div>
+          </div>
+      </div>
+
+      <div class="activity">
+        <div class="title">
+            <i class="uil uil-file-alt"></i>
+            <span class="text">Todos los registros</span>
+        </div>
+
+        <div class="activity-data">
+            <div class="data names">
+                <span class="data-title">N. gabeta</span>
+                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                  %>
+                  <span class="data-list"><%= difunto[i].id %></span>
+                <% } %> <% } %>
+            </div>
+            <div class="data email">
+              <span class="data-title">Nombre del difunto</span>
+                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                  %>
+                  <span class="data-list"><%= difunto[i].name %></span>
+                <% } %> <% } %>
+            </div>            
+            <div class="data joined">
+                <span class="data-title">Sección</span>
+                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                  %>
+                  <span class="data-list"><%= difunto[i].seccion %></span>
+                <% } %> <% } %>
+            </div>
+            <div class="data floors">
+              <span class="data-title">Pisos</span>
+              <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                %>
+                <span class="data-list"><%= difunto[i].pisos %></span>
+              <% } %> <% } %>
+            </div>
+            <div class="data type">
+                <span class="data-title">N. anterior</span>
+                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                  %>
+                  <span class="data-list"><%= difunto[i].num %></span>
+                <% } %> <% } %>
+            </div>
+            
+            <div class="data status">
+                <span class="data-title">Panteón</span>
+                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                  %>
+                  <span class="data-list"><%= difunto[i].panteon %></span>
+                <% } %> <% } %>
+            </div>
+
+        </div>
+        
+    </div>
+  </div>
+</section>
+
+<%- include("partials/_createDifuntos") %>
 <%- include("partials/_footer") %>

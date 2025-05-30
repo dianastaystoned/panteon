@@ -1,0 +1,48 @@
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <h2 class="title">Agregar registro</h2>
+    <span class="close-btn" id="closeModal">&times;</span>
+
+    <!-- SOLO un form -->
+    <form action="/add" method="POST" class="form-grid">
+      <div class="input-field">
+        <input type="text" name="name" placeholder="Nombre del difunto"  />
+        <i class="uil uil-user icon"></i>
+      </div>
+
+      <div class="input-field">
+        <input type="text" name="seccion" placeholder="Sección" />
+        <i class="uil uil-map-marker icon"></i>
+      </div>
+
+      <div class="input-field">
+        <input type="text" name="fecha" placeholder="Fecha" />
+        <i class="uil uil-calendar-alt icon"></i>
+      </div>
+
+      <div class="input-field">
+        <input type="number" name="pisos" placeholder="N.º de gabetas construidas sobre" />
+        <i class="uil uil-layers icon"></i>
+      </div>
+
+      <div class="input-field">
+        <input type="number" name="num" placeholder="N.º de gabeta anterior" />
+        <i class="uil uil-history icon"></i>
+      </div>
+
+      <div class="input-field">
+        <label for="">Panteón</label>
+        
+        <select name="panteon" required>
+          <option value="VIEJO">Panteón viejo</option>
+          <option value="NUEVO">Panteón nuevo</option>
+        </select>
+      </div>
+
+      <!-- Botón ocupa todo el ancho de la grid --> <br>
+      <div class="input-field button full">
+        <input type="submit" value="Guardar" />
+      </div>
+    </form>
+  </div>
+</div>
