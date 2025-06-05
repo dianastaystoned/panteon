@@ -6,11 +6,13 @@ import {
   renderDifunto,
   updateDifunto,
   exportData,
-  allDifuntos
+  allDifuntos,
+  renderErrDifunto
 } from "../controllers/customerController.js";
 const router = Router();
 
 router.get("/", renderDifunto);
+router.get("/err", renderErrDifunto);
 router.post("/add", createDifunto);
 router.get("/api/difunto/:id", editDifunto);
 router.post("/update/:id", updateDifunto);

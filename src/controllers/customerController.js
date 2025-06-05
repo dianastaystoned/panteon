@@ -6,28 +6,69 @@ export const renderDifunto = async (req, res) => {
   const [[{allCement}]] = await pool.query("SELECT COUNT(*) AS allCement FROM difunto");
   const [[{oldCement}]] = await pool.query("SELECT COUNT(*) AS oldCement FROM difunto WHERE panteon = 'VIEJO';");
   const [[{newCement}]] = await pool.query("SELECT COUNT(*) AS newCement FROM difunto WHERE panteon = 'NUEVO';");
-  res.render("difunto", { difunto: rows, allCement, oldCement, newCement });
+  const [[{ usedCement }]] = await pool.query("SELECT COUNT(*) AS usedCement FROM difunto WHERE (name = '' OR name IS NOT NULL) AND (fecha = '' OR fecha IS NOT NULL) AND (num = '' OR num IS NOT NULL)");
+  const [recentChanges] = await pool.query(`SELECT * FROM difunto WHERE name != '' AND fecha != '' AND num != '' ORDER BY updated_at DESC LIMIT 5`);
+  const availableCement = allCement - usedCement;
+  res.render("difunto", { difunto: rows, allCement, oldCement, newCement, availableCement, recentChanges});
 };
+
+export const renderErrDifunto = async (req, res) => {
+  const [rows] = await pool.query(`
+    SELECT *
+    FROM difunto
+    WHERE
+      name IS NULL
+      OR name = ''
+      OR LENGTH(TRIM(name)) <= 2
+      OR name NOT LIKE '% %'
+      OR fecha IS NULL
+      OR TRIM(fecha) = ''
+      OR NOT (fecha REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$')
+  `);
+  res.render("errDifunto", { difunto: rows });
+};
+
 
 export const createDifunto = async (req, res) => {
   const { name, seccion, fecha, pisos, num, panteon } = req.body;
 
-  // Convertir a 0 si está vacío
   const pisosValue = pisos === '' ? 0 : parseInt(pisos);
   const numValue = num === '' ? 0 : parseInt(num);
+  const fechaValue = fecha.replace(/\s+/g, '');
 
-  await pool.query('INSERT INTO difunto SET ?', {
+  const [result] = await pool.query('INSERT INTO difunto SET ?', {
     name,
     seccion,
-    fecha,
+    fecha: fechaValue,
     pisos: pisosValue,
     num: numValue,
     panteon
   });
 
-  res.redirect('/');
-};
+  // Obtener el nuevo registro
+  const [nuevo] = await pool.query('SELECT * FROM difunto WHERE id = ?', [result.insertId]);
 
+  // Recalcular contadores
+  const [[{ allCement }]] = await pool.query("SELECT COUNT(*) AS allCement FROM difunto");
+  const [[{ oldCement }]] = await pool.query("SELECT COUNT(*) AS oldCement FROM difunto WHERE panteon = 'VIEJO';");
+  const [[{ newCement }]] = await pool.query("SELECT COUNT(*) AS newCement FROM difunto WHERE panteon = 'NUEVO';");
+  const [[{ usedCement }]] = await pool.query("SELECT COUNT(*) AS usedCement FROM difunto WHERE (name = '' OR name IS NOT NULL) AND (fecha = '' OR fecha IS NOT NULL) AND (num = '' OR num IS NOT NULL)");
+  const [recentChanges] = await pool.query(`SELECT * FROM difunto WHERE name != '' AND fecha != '' AND num != '' ORDER BY updated_at DESC LIMIT 5`);
+  const availableCement = allCement - usedCement;
+  // Emitir nuevo dato y contadores actualizados
+  const io = req.app.get("io");
+  console.log("Enviando evento nuevoRegistro con datos:", { nuevo });
+  io.emit("nuevoRegistro", {
+    ...nuevo[0],
+    allCement,
+    oldCement,
+    newCement,
+    availableCement
+  });
+  console.log("Evento nuevoRegistro emitido");
+
+  res.sendStatus(200);
+};
 
 export const editDifunto = async (req, res) => {
   const { id } = req.params;

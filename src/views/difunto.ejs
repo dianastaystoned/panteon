@@ -1,83 +1,6 @@
 <%- include("partials/_header") %>
 
-<!-- <div class="container mt-5">
-  <div class="row gx-4">
-    <div class="col-md-7">
-      <table class="table table-sm table-dark table-responsive table-striped table-hover">
-        <thead>
-          <tr>
-            <td>N°</td>
-            <td>Nombre</td>
-            <td>Seccion</td>
-            <td>Fecha</td>
-            <td>Pisos</td>
-            <td>Acciones</td>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
-          %>
-          <tr>
-            <td><%= (i + 1) %></td>
-            <td style="white-space: normal; word-wrap: break-word; max-width: 150px;"><%= difunto[i].name %></td>
-            <td><%= difunto[i].seccion %></td>
-            <td><%= difunto[i].fecha %></td>
-            <td><%= difunto[i].pisos %></td>
-            <td class="d-flex gap-2">
-              <a href="/update/<%= difunto[i].id %>" class="btn btn-info">
-                Editar
-              </a>
-              <a href="/delete/<%= difunto[i].id %>" class="btn btn-danger">
-                Borrar
-              </a>
-            </td>
-          </tr>
-          <% } %> <% } %>
-        </tbody>
-      </table>
-    </div>
-    <br><br><br>
-    <div class="col-md-5">
-      <div class="card-body">
-        <form action="/add" method="POST">
-          <input
-            type="text"
-            name="name"
-            placeholder="Nombre del difunto"
-            class="form-control mb-2"
-            autofocus
-            oninput="this.value = this.value.toUpperCase();"
-          />
-          <input
-            type="text"
-            name="seccion"
-            placeholder="Sección del panteon"
-            class="form-control mb-2"
-            oninput="this.value = this.value.toUpperCase();"
-          />
-          <input
-            type="text"
-            name="fecha"
-            placeholder="Fecha de defunción"
-            class="form-control mb-2"
-          />
-          <input
-            type="number"
-            name="pisos"
-            value="<%= difunto.pisos%>"
-            placeholder="Número de gabetas"
-            class="form-control mb-3"
-          />
-          <button type="submit" class="btn btn-success">Guardar difunto</button>
-          <a href="/export-excel" class="btn btn-info">
-            Exportar Excel
-          </a>
-        </form>
-      </div>
-    </div>
-  </div>
-</div> -->
-<section class="dashboard">
+<!-- <section class="dashboard">
   <div class="top">
   </div>
 
@@ -107,7 +30,7 @@
           </div>
       </div>
 
-      <div class="activity">
+    <div class="activity">
         <div class="title">
             <i class="uil uil-file-alt"></i>
             <span class="text">Todos los registros</span>
@@ -129,11 +52,12 @@
                 <% } %> <% } %>
             </div>            
             <div class="data joined">
-                <span class="data-title">Sección</span>
-                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
-                  %>
+              <span class="data-title">Sección</span>
+              <% if (difunto) { %>
+                <% for(var i = 0; i < difunto.length; i++) { %>
                   <span class="data-list"><%= difunto[i].seccion %></span>
-                <% } %> <% } %>
+                <% } %>
+              <% } %>
             </div>
             <div class="data floors">
               <span class="data-title">Pisos</span>
@@ -149,20 +73,184 @@
                   <span class="data-list"><%= difunto[i].num %></span>
                 <% } %> <% } %>
             </div>
-            
+
             <div class="data status">
-                <span class="data-title">Panteón</span>
-                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
-                  %>
-                  <span class="data-list"><%= difunto[i].panteon %></span>
-                <% } %> <% } %>
+                <span class="data-title">Fecha</span>
+                <% if (difunto) { %>
+                  <% for(var i = 0; i < difunto.length; i++) { %>
+                    <span class="data-list"><%= difunto[i].fecha %></span>
+                  <% } %>
+                <% } %>
             </div>
 
         </div>
         
     </div>
   </div>
+</section> -->
+
+<section id="content">
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Inicio</h1>
+        <ul class="breadcrumb">
+          <li>
+          </li>
+          <li>
+          </li>
+        </ul>
+      </div>
+      <a href="#" class="btn-download">
+        <i class='uil uil-download-alt' ></i>
+        <span class="text">Descargar PDF</span>
+      </a>
+    </div>
+  
+    <ul class="box-info">
+      <li>
+        <i class='uil uil-building'></i>
+        <span class="text">
+          <h3 id="totalCement"><%= allCement %></h3>
+          <p>Total de gavetas</p>
+        </span>
+      </li>
+      <li>
+        <i class='uil uil-trees'></i>
+        <span class="text">
+          <h3 id="newCement"><%= newCement %></h3>
+          <p>Panteón nuevo</p>
+        </span>
+      </li>
+      <li>
+        <i class='uil uil-archway'></i>
+        <span class="text">
+          <h3 id="oldCement"><%= oldCement %></h3>
+          <p>Panteón viejo</p>
+        </span>
+      </li>
+      <li>
+        <i class='uil uil-check-circle'></i>
+        <span class="text">
+          <h3 id="availableCement"><%= availableCement %></h3>
+          <p>Disponibles</p>
+        </span>
+      </li>
+    </ul>
+    
+    
+  
+  
+    <div class="table-data">
+      <div class="order">
+        <div class="head">
+          <h3>Recientes</h3>
+          <!-- <i class='bx bx-search' ></i>
+          <i class='bx bx-filter' ></i> -->
+        </div>
+        <div class="table-container">
+          <table class="scroll-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Fecha</th>
+                <th>Panteón</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                %>
+              <tr>
+                <td>
+                  <p><%= difunto[i].name %></p>
+                </td>
+                <td><%= difunto[i].fecha %></td>
+                <td><span class="status <%= difunto[i].panteon === 'VIEJO' ? 'viejo' : 'nuevo' %>"><%= difunto[i].panteon %></span></td>
+              </tr>
+              <% } %> <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="todo">
+        <div class="head">
+          <h3>Modificados</h3>
+          <!-- <i class='bx bx-plus' ></i>
+          <i class='bx bx-filter' ></i> -->
+        </div>
+        <ul class="todo-list">
+          <% recentChanges.forEach((item) => { %>
+            <li class="completed">
+              <p><%= item.name %></p>
+              <i class="uil uil-elipsis-double-v-alt view-btn" data-id="<%= item.id %>"></i>
+            </li>
+          <% }) %>
+        </ul>        
+      </div>
+    </div>
+  </main>
 </section>
+<ul class="recent-list">
+  <% recentChanges.forEach((item, index) => { %>
+    <li>
+      <span><%= item.name %></span>
+      <button class="view-btn"  data-id="<%= item.id %>" data-index="<%= index %>">
+        <i class="uil uil-eye"></i>
+      </button>
+    </li>
+  <% }) %>
+</ul>
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const socket = io();
+
+  socket.on("connect", () => {
+    console.log("Conectado a WebSocket con ID:", socket.id);
+  });
+
+  socket.on("nuevoRegistro", (data) => {
+    console.log("Datos recibidos:", data); // <-- aquí debe aparecer
+    const tbody = document.querySelector(".scroll-table tbody");
+    const tr = document.createElement("tr");
+
+    // Nombre con <p>
+    const tdNombre = document.createElement("td");
+    const pNombre = document.createElement("p");
+    pNombre.textContent = data.name;
+    tdNombre.appendChild(pNombre);
+
+    // Fecha
+    const tdFecha = document.createElement("td");
+    tdFecha.textContent = data.fecha;
+
+    // Panteón con <span> y clase dinámica
+    const tdPanteon = document.createElement("td");
+    const spanPanteon = document.createElement("span");
+    spanPanteon.textContent = data.panteon;
+    spanPanteon.className = `status ${data.panteon === "VIEJO" ? "viejo" : "nuevo"}`;
+    tdPanteon.appendChild(spanPanteon);
+
+    // Agrega todos los <td> al <tr>
+    tr.appendChild(tdNombre);
+    tr.appendChild(tdFecha);
+    tr.appendChild(tdPanteon);
+
+    // Agrega la fila al final del tbody
+    tbody.appendChild(tr);
+    document.getElementById("totalCement").textContent = data.allCement;
+    document.getElementById("newCement").textContent = data.newCement;
+    document.getElementById("oldCement").textContent = data.oldCement;
+    document.getElementById("availableCement").textContent = data.availableCement;
+
+    })
+});
+</script>
+
 
 <%- include("partials/_createDifuntos") %>
+<%- include("partials/_seeDifunto") %>
 <%- include("partials/_footer") %>

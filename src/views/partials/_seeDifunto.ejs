@@ -1,0 +1,44 @@
+<div id="modalsee" class="modal">
+    <div class="modal-content">
+      <h2 class="title" id="modalTitle">Tumba de <%= difunto.name %></h2>
+      <span class="close-btn" id="closeModalSee">&times;</span>
+  
+      <!-- SOLO un form -->
+      <form id="seeForm" action="" method="" class="form-grid">
+        <div class="input-field">
+          <input type="text" name="name" value="<%= difunto.name %>"  oninput="this.value = this.value.toUpperCase();"disabled/>
+          <i class="uil uil-user icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <input type="text" name="seccion" value="<%= difunto.seccion %>" oninput="this.value = this.value.toUpperCase();"disabled/>
+          <i class="uil uil-map-marker icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <input type="text" name="fecha" value="<%= difunto.fecha %>" disabled/>
+          <i class="uil uil-calendar-alt icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <input type="number" name="pisos" value="<%= difunto.pisos %>" disabled/>
+          <i class="uil uil-layers icon"></i>
+        </div>
+  
+        <div class="input-field">
+          <input type="number" name="num" value="<%= difunto.num %>" disabled/>
+          <i class="uil uil-history icon"></i>
+        </div>
+  
+        <div class="input-field" >
+          <label for="">Panteón</label>
+          <select name="panteon" required disabled>
+            <option value="VIEJO">Panteón viejo</option>
+            <option value="NUEVO">Panteón nuevo</option>
+          </select>
+        </div>
+  
+        <!-- Botón ocupa todo el ancho de la grid -->
+      </form>
+    </div>
+  </div>

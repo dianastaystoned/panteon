@@ -1,32 +1,19 @@
 <script>
-    document.addEventListener("keyup", (e) => {
+  
+  document.addEventListener("keyup", function(e) {
   if (e.target.matches("#buscador")) {
-    if (e.key === "Escape") e.target.value = "";
-
     const search = e.target.value.toUpperCase();
 
-    const nombres = document.querySelectorAll(".email .nombre");
+    document.querySelectorAll(".scroll-table tbody tr").forEach((row) => {
+      const nombre = row.cells[0]?.textContent.toUpperCase() || "";
+      const fecha = row.cells[1]?.textContent.toUpperCase() || "";
+      const panteon = row.cells[2]?.textContent.toUpperCase() || "";
+      const seccion = row.cells[3]?.textContent.toUpperCase() || "";
+      const num = row.cells[4]?.textContent.toUpperCase() || "";
 
-    nombres.forEach((nombre, index) => {
-      const seccion = document.querySelectorAll(".joined .seccion")[index].textContent.toUpperCase();
-      const panteon = document.querySelectorAll(".status .panteon")[index].textContent.toUpperCase();
-      const gabeta = document.querySelectorAll(".names .data-list")[index].textContent.toUpperCase();
-      const num = document.querySelectorAll(".type .num")[index].textContent.toUpperCase();
+      const coincide = nombre.includes(search) || fecha.includes(search) || panteon.includes(search);
 
-      const coincide =
-        nombre.textContent.toUpperCase().includes(search) ||
-        seccion.includes(search) ||
-        panteon.includes(search) ||
-        gabeta.includes(search) ||
-        num.includes(search);
-
-      // Mostrar u ocultar los datos en todas las columnas
-      document.querySelectorAll(".names .data-list")[index].style.display = coincide ? "" : "none";
-      document.querySelectorAll(".email .nombre")[index].style.display = coincide ? "" : "none";
-      document.querySelectorAll(".joined .seccion")[index].style.display = coincide ? "" : "none";
-      document.querySelectorAll(".floors .data-list")[index].style.display = coincide ? "" : "none";
-      document.querySelectorAll(".type .num")[index].style.display = coincide ? "" : "none";
-      document.querySelectorAll(".status .panteon")[index].style.display = coincide ? "" : "none";
+      row.style.display = coincide ? "" : "none";
     });
   }
 });
@@ -54,11 +41,58 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  document.querySelectorAll(".data-list").forEach((el) => {
-    el.addEventListener("dblclick", async () => {
+  document.querySelectorAll('.open-edit-btn').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const id = btn.getAttribute("data-id");
+    if (!id) {
+      alert("No hay ID asignado a este botón.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/difunto/${id}`);
+      if (!res.ok) throw new Error("No se pudo obtener el registro");
+
+      const difunto = await res.json();
+
+      // Actualizar título modal
+      document.getElementById("modalTitle").textContent = `Editar registro de ${difunto.name}`;
+
+      // Llenar formulario
+      editForm.action = `/update/${difunto.id}`;
+      editForm.name.value = difunto.name || '';
+      editForm.seccion.value = difunto.seccion || '';
+      editForm.fecha.value = difunto.fecha || '';
+      editForm.panteon.value = difunto.panteon || '';
+      editForm.pisos.value = difunto.pisos !== null && difunto.pisos !== undefined ? difunto.pisos : '';
+      editForm.num.value = difunto.num !== null && difunto.num !== undefined ? difunto.num : '';
+
+      // Mostrar modal
+      modaledit.classList.add("show");
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+});
+
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const modalsee = document.getElementById("modalsee");
+  const seeForm = document.getElementById("seeForm");
+
+  // Cerrar modal
+  const closeModalSee = document.getElementById("closeModalSee");
+  closeModalSee.addEventListener("click", () => {
+    modalsee.classList.remove("show");
+  });
+
+  // Abrir modal al hacer clic en el ícono
+  document.querySelectorAll(".view-btn").forEach((el) => {
+    el.addEventListener("click", async () => {
       const id = el.getAttribute("data-id");
       if (!id) {
-        alert("No hay ID asignado a este elemento.");
+        alert("No hay ID asignado.");
         return;
       }
 
@@ -68,29 +102,120 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const difunto = await res.json();
 
-        // Actualizar título modal
-        document.getElementById("modalTitle").textContent = `Editar registro de ${difunto.name}`;
+        document.getElementById("modalTitle").textContent = `Tumba de ${difunto.name}`;
 
-        // Llenar formulario
-        editForm.action = `/update/${difunto.id}`;
-        console.log("Datos recibidos:", difunto);
-        editForm.name.value = difunto.name || '';
-        editForm.seccion.value = difunto.seccion || '';
-        editForm.fecha.value = difunto.fecha || '';
-        editForm.panteon.value = difunto.panteon || '';
-        editForm.pisos.value = difunto.pisos !== null && difunto.pisos !== undefined ? difunto.pisos : '';
-        editForm.num.value = difunto.num !== null && difunto.num !== undefined ? difunto.num : '';
+        // Llenar el formulario
+        seeForm.name.value = difunto.name || '';
+        seeForm.seccion.value = difunto.seccion || '';
+        seeForm.fecha.value = difunto.fecha || '';
+        seeForm.panteon.value = difunto.panteon || '';
+        seeForm.pisos.value = difunto.pisos || '';
+        seeForm.num.value = difunto.num || '';
 
+        // Mostrar el modal correcto
+        modalsee.classList.add("show");
 
-        // Mostrar modal
-        modaledit.classList.add("show");
       } catch (error) {
         alert(error.message);
       }
     });
   });
 
+  // Cerrar haciendo clic fuera del contenido (opcional)
+  window.addEventListener("click", (e) => {
+    if (e.target === modalsee) {
+      modalsee.classList.remove("show");
+    }
+  });
 });
+
+
+const form = document.getElementById("registroForm");
+const socket = io();
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  // Si "pisos" o "num" están vacíos, ponerlos en 0
+  data.pisos = data.pisos || 0;
+  data.num = data.num || 0;
+
+  try {
+    const res = await fetch("/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      form.reset();
+      modal.classList.remove("show");
+      // No hace falta redirigir ni recargar, socket lo actualizará todo
+    } else {
+      alert("Error al guardar el registro");
+    }
+  } catch (error) {
+    console.error("Error en la petición", error);
+    alert("Error en la petición, revisa la consola.");
+  }
+});
+
+function sincronizarAlturas() {
+    const columnas = document.querySelectorAll('.data');
+    if (columnas.length === 0) return;
+
+    const numFilas = columnas[0].querySelectorAll('.data-list').length;
+    columnas.forEach(col => {
+      col.style.setProperty('--num-rows', numFilas);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', sincronizarAlturas);
+// Escucha nuevos registros para agregarlos a la tabla
+socket.on("nuevoRegistro", (data) => {
+  const idSpan = document.createElement("span");
+  idSpan.className = "data-list";
+  idSpan.dataset.id = data.id;
+  idSpan.textContent = data.id;
+
+  const nameSpan = document.createElement("span");
+  nameSpan.className = "data-list nombre";
+  nameSpan.dataset.id = data.id;
+  nameSpan.textContent = data.name;
+
+  const seccionSpan = document.createElement("span");
+  seccionSpan.className = "data-list seccion";
+  seccionSpan.dataset.id = data.id;
+  seccionSpan.textContent = data.seccion;
+
+  const pisosSpan = document.createElement("span");
+  pisosSpan.className = "data-list";
+  pisosSpan.dataset.id = data.id;
+  pisosSpan.textContent = data.pisos;
+
+  const numSpan = document.createElement("span");
+  numSpan.className = "data-list num";
+  numSpan.dataset.id = data.id;
+  numSpan.textContent = data.num;
+
+  const panteonSpan = document.createElement("span");
+  panteonSpan.className = "data-list panteon";
+  panteonSpan.dataset.id = data.id;
+  panteonSpan.textContent = data.panteon;
+
+  document.querySelector(".data.names").appendChild(idSpan);
+  document.querySelector(".data.email").appendChild(nameSpan);
+  document.querySelector(".data.joined").appendChild(seccionSpan);
+  document.querySelector(".data.floors").appendChild(pisosSpan);
+  document.querySelector(".data.type").appendChild(numSpan);
+  document.querySelector(".data.status").appendChild(panteonSpan);
+  
+  sincronizarAlturas();
+});
+
   </script>
   
 </body>

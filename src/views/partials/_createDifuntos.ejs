@@ -4,7 +4,7 @@
     <span class="close-btn" id="closeModal">&times;</span>
 
     <!-- SOLO un form -->
-    <form action="/add" method="POST" class="form-grid">
+    <form id="registroForm" class="form-grid">
       <div class="input-field">
         <input type="text" name="name" placeholder="Nombre del difunto"  oninput="this.value = this.value.toUpperCase();"/>
         <i class="uil uil-user icon"></i>
@@ -46,3 +46,5 @@
     </form>
   </div>
 </div>
+
+<script src="/socket.io/socket.io.js"></script>

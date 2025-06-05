@@ -1,0 +1,196 @@
+<%- include("partials/_header") %>
+
+<!-- <section class="dashboard">
+  <div class="top">
+      <i class="uil uil- sidebar-toggle"></i>
+
+       <div class="search-box">
+          <i class="uil uil-search"></i>
+          <input type="text" name="buscador" id="buscador" placeholder="Busca por nombre aquí..." autofocus
+          oninput="this.value = this.value.toUpperCase();">
+       </div>
+      
+      <img src="images/profile.jpg" alt="">
+  </div>
+
+  <div class="dash-content">
+
+      <div class="activity">
+          <div class="title">
+              <i class="uil uil-file-alt"></i>
+              <span class="text">Todos los registros</span>
+          </div>
+
+          <div class="activity-data">
+              <div class="data names">
+                  <span class="data-title">N. gaveta</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list" data-id="<%= difunto[i].id %>"><%= difunto[i].id %></span>
+                  <% } %> <% } %>
+              </div>
+              <div class="data email">
+                <span class="data-title">Nombre del difunto</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list nombre" data-id="<%= difunto[i].id %>"><%= difunto[i].name %></span>
+                  <% } %> <% } %>
+              </div>            
+              <div class="data joined">
+                  <span class="data-title">Sección</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list seccion" data-id="<%= difunto[i].id %>"><%= difunto[i].seccion %></span>
+                  <% } %> <% } %>
+              </div>
+              <div class="data floors">
+                <span class="data-title">Pisos</span>
+                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                  %>
+                  <span class="data-list" data-id="<%= difunto[i].id %>"><%= difunto[i].pisos %></span>
+                <% } %> <% } %>
+              </div>
+              <div class="data type">
+                  <span class="data-title">N. anterior</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list num" data-id="<%= difunto[i].id %>"><%= difunto[i].num %></span>
+                  <% } %> <% } %>
+              </div>
+              
+              <div class="data status">
+                  <span class="data-title">Fecha</span>
+                  <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                    %>
+                    <span class="data-list fecha" data-id="<%= difunto[i].id %>"><%= difunto[i].fecha %></span>
+                  <% } %> <% } %>
+              </div>
+
+          </div>
+          
+      </div>
+  </div>
+</section> -->
+
+
+<section id="content">
+  <main> 
+    <div class="table-data">
+      <div class="order">
+        <div class="head">
+          <h3>Todos los registros</h3>
+          <!-- <i class='bx bx-search' ></i>
+          <i class='bx bx-filter' ></i> -->
+        </div>
+        <div class="table-container">
+          <table class="scroll-table wide-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Fecha</th>
+                <th>Panteón</th>
+                <th>Sección</th>
+                <th>N. actual</th>
+                <th>N. anterior</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
+                %>
+              <tr>
+                <td>
+                  <p><%= difunto[i].name %></p>
+                </td>
+                <td><%= difunto[i].fecha %></td>
+                <td><span class="status <%= difunto[i].panteon === 'VIEJO' ? 'viejo' : 'nuevo' %>"><%= difunto[i].panteon %></span></td>
+                <td><%= difunto[i].seccion %></td>
+                <td><%= difunto[i].id %></td>
+                <td><%= difunto[i].num %></td>
+                <td>
+                  <button class="open-edit-btn input-fiel button full" data-id="<%= difunto[i].id %>">Editar</button>
+                </td>
+              </tr>
+              <% } %> <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const socket = io();
+
+    socket.on("nuevoRegistro", (data) => {
+  const tbody = document.querySelector(".scroll-table tbody");
+
+  const tr = document.createElement("tr");
+
+  // Nombre con <p>
+  const tdNombre = document.createElement("td");
+  const pNombre = document.createElement("p");
+  pNombre.textContent = data.name;
+  tdNombre.appendChild(pNombre);
+
+  // Fecha
+  const tdFecha = document.createElement("td");
+  tdFecha.textContent = data.fecha;
+
+  // Panteón con <span> y clase dinámica
+  const tdPanteon = document.createElement("td");
+  const spanPanteon = document.createElement("span");
+  spanPanteon.textContent = data.panteon;
+  spanPanteon.className = `status ${data.panteon === "VIEJO" ? "viejo" : "nuevo"}`;
+  tdPanteon.appendChild(spanPanteon);
+
+  // Sección
+  const tdSeccion = document.createElement("td");
+  tdSeccion.textContent = data.seccion;
+
+  // N. actual
+  const tdId = document.createElement("td");
+  tdId.textContent = data.id;
+
+  // N. anterior
+  const tdNum = document.createElement("td");
+  tdNum.textContent = data.num;
+
+  // Botón de acción
+  const tdAcciones = document.createElement("td");
+  const btnEditar = document.createElement("button");
+  btnEditar.className = "open-edit-btn input-fiel button full";
+  btnEditar.dataset.id = data.id;
+  btnEditar.textContent = "Editar";
+  tdAcciones.appendChild(btnEditar);
+
+  // Agrega todos los <td> al <tr>
+  tr.appendChild(tdNombre);
+  tr.appendChild(tdFecha);
+  tr.appendChild(tdPanteon);
+  tr.appendChild(tdSeccion);
+  tr.appendChild(tdId);
+  tr.appendChild(tdNum);
+  tr.appendChild(tdAcciones);
+
+  // Agrega la fila al final del tbody
+  tbody.appendChild(tr);
+  document.querySelector(".box1 .number").textContent = data.allCement;
+document.querySelector(".box2 .number").textContent = data.newCement;
+document.querySelector(".box3 .number").textContent = data.oldCement;
+
+});
+  })
+</script>
+
+
+<%- include("partials/_editDifunto") %>
+<%- include("partials/_createDifuntos") %>
+<%- include("partials/_footer") %>
