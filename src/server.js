@@ -12,7 +12,7 @@ io.on("connection", (socket) => {
   console.log("Cliente conectado socket:", socket.id);
 });
 
-const PORT = app.get("port") || 3000;
+const PORT = app.get("port") || 4000;
 server.listen(PORT, () => {
   console.log("Servidor corriendo en puerto", PORT);
 });

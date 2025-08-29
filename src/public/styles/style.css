@@ -605,34 +605,33 @@ body {
 }
   
   .modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4);
-    overflow-y: auto;
-    justify-content: center;
-    padding: 40px 0; /* Espacio arriba y abajo */
-  }
-  
-  .modal.show {
-    display: flex;
-  }
-  
-  .modal-content {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 750px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
+  display: none;
+  position: fixed;
+  inset: 0;             /* top/right/bottom/left: 0 */
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,.4);
+}
+
+.modal.show {
+  display: flex;
+  align-items: center;   /* centra vertical */
+  justify-content: center; /* centra horizontal */
+  padding: 40px 16px;    /* respiración + evitar pegarse a bordes en mobile */
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 750px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.3);
+  position: relative;
+  max-height: 90vh;
+  overflow: auto;
+}
   
   .close-btn {
     position: absolute;
