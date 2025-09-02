@@ -75,3 +75,12 @@ switchMode.addEventListener('change', function () {
 	}
 })
 
+const button = document.querySelector(".button-download");
+      button.addEventListener("click", () => {
+        button.classList.add("active");
+        setTimeout(() => {
+          button.classList.remove("active");
+          button.querySelector("i").classList.replace("bx-cloud-download", "bx-check-circle");
+          button.querySelector("span").innerText = "Completado";
+        }, 600);
+      });

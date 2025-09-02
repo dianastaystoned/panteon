@@ -7,9 +7,9 @@ export const renderDifunto = async (req, res) => {
   const [[{oldCement}]] = await pool.query("SELECT COUNT(*) AS oldCement FROM difunto WHERE panteon = 'VIEJO';");
   const [[{newCement}]] = await pool.query("SELECT COUNT(*) AS newCement FROM difunto WHERE panteon = 'NUEVO';");
   const [[{ usedCement }]] = await pool.query("SELECT COUNT(*) AS usedCement FROM difunto WHERE (name = '' OR name IS NOT NULL) AND (fecha = '' OR fecha IS NOT NULL) AND (num = '' OR num IS NOT NULL)");
-  const [recentChanges] = await pool.query(`SELECT * FROM difunto WHERE name != '' AND fecha != '' AND num != '' ORDER BY updated_at DESC LIMIT 5`);
+  // const [responsible] = await pool.query(`SELECT * FROM responsables`);
   const availableCement = allCement - usedCement;
-  res.render("difunto", { difunto: rows, allCement, oldCement, newCement, availableCement, recentChanges});
+  res.render("difunto", { difunto: rows, allCement, oldCement, newCement, availableCement});
 };
 
 export const renderErrDifunto = async (req, res) => {
@@ -46,7 +46,7 @@ function formatearFecha(fecha) {
 }
 
 export const createDifunto = async (req, res) => {
-  const { name, seccion, fecha, pisos, num, panteon } = req.body;
+  const { name, seccion, fecha, pisos, num, panteon, estado} = req.body;
 
   const pisosValue = pisos === '' ? 0 : parseInt(pisos);
   const numValue = num === '' ? 0 : parseInt(num);
@@ -83,7 +83,8 @@ export const createDifunto = async (req, res) => {
       pisos: pisosValue,
       num: numValue,
       panteon,
-      act: ultimo_act
+      act: ultimo_act,
+      estado
     });
 
     await conn.commit();
@@ -98,10 +99,12 @@ export const createDifunto = async (req, res) => {
     const [[{ usedCement }]] = await pool.query(`
       SELECT COUNT(*) AS usedCement
       FROM difunto
-      WHERE (name != '' AND name IS NOT NULL)
-        AND (fecha != '' AND fecha IS NOT NULL)
-        AND (num != '' AND num IS NOT NULL)
+      WHERE 
+        (name = '' OR name IS NULL)
+        AND (fecha = '' OR fecha IS NULL)
+        AND (pisos = '' OR pisos IS NULL)
     `);
+
     const availableCement = allCement - usedCement;
 
     // ✅ Emitir evento con Socket.IO incluyendo `act`
@@ -146,7 +149,8 @@ export const editDifunto = async (req, res) => {
     fecha: result[0].fecha,
     pisos: result[0].pisos,
     num: result[0].num,
-    panteon: result[0].panteon
+    panteon: result[0].panteon,
+    estado: result[0].estado
   };
   res.json(difunto);
 };
@@ -155,8 +159,30 @@ export const editDifunto = async (req, res) => {
 export const updateDifunto = async (req, res) => {
   const { id } = req.params;
   const newCustomer = req.body;
-  await pool.query("UPDATE difunto set ? WHERE id = ?", [newCustomer, id]);
-  res.redirect("/all");
+
+  try {
+    // Actualizar en BD
+    await pool.query("UPDATE difunto SET ? WHERE id = ?", [newCustomer, id]);
+
+    // Consultar el registro actualizado
+    const [rows] = await pool.query("SELECT * FROM difunto WHERE id = ?", [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "No encontrado después de actualizar" });
+    }
+
+    const actualizado = rows[0];
+
+    // Emitir evento socket con los nuevos datos
+    const io = req.app.get("io");
+    io.emit("registroActualizado", actualizado);
+
+    // Mantener el redirect (flujo actual con formularios tradicionales)
+    res.redirect("/all");
+
+  } catch (error) {
+    console.error("Error al actualizar difunto:", error.message);
+    res.status(500).json({ error: "Error al actualizar difunto" });
+  }
 };
 
 export const deleteDifunto = async (req, res) => {
@@ -182,7 +208,8 @@ export const exportData = async (req, res) => {
     { header: 'Fecha', key: 'fecha', width: 20 },
     { header: 'Gavetas en el mismo piso', key: 'pisos', width: 25 },
     { header: 'N. de gaveta anterior', key: 'num', width: 25 },
-    { header: 'Panteón al que pertenece', key: 'panteon', width: 25 }
+    { header: 'Panteón al que pertenece', key: 'panteon', width: 25 },
+    { header: 'Estado', key: 'estado', width: 25 }
   ];
 
   // Estilos para los encabezados

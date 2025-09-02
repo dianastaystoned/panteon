@@ -2,21 +2,35 @@
   
   document.addEventListener("keyup", function(e) {
   if (e.target.matches("#buscador")) {
-    const search = e.target.value.toUpperCase();
+    const normalizeText = (str) => {
+      return str
+        .normalize("NFD") // descompone letras con tilde
+        .replace(/[\u0300-\u036f]/g, "") // quita diacríticos
+        .replace(/[^\w\s]/gi, "") // quita signos de puntuación
+        .toUpperCase();
+    };
+
+    const search = normalizeText(e.target.value);
 
     document.querySelectorAll(".scroll-table tbody tr").forEach((row) => {
-      const nombre = row.cells[0]?.textContent.toUpperCase() || "";
-      const fecha = row.cells[1]?.textContent.toUpperCase() || "";
-      const panteon = row.cells[2]?.textContent.toUpperCase() || "";
-      const seccion = row.cells[3]?.textContent.toUpperCase() || "";
-      const num = row.cells[4]?.textContent.toUpperCase() || "";
+      const nombre = normalizeText(row.cells[0]?.textContent || "");
+      const fecha = normalizeText(row.cells[1]?.textContent || "");
+      const panteon = normalizeText(row.cells[2]?.textContent || "");
+      const seccion = normalizeText(row.cells[3]?.textContent || "");
+      const num = normalizeText(row.cells[4]?.textContent || "");
 
-      const coincide = nombre.includes(search) || fecha.includes(search) || panteon.includes(search);
+      const coincide =
+        nombre.includes(search) ||
+        fecha.includes(search) ||
+        panteon.includes(search) ||
+        seccion.includes(search) ||
+        num.includes(search);
 
       row.style.display = coincide ? "" : "none";
     });
   }
 });
+
 
 const openModalBtn = document.getElementById("openModal");
 const modal = document.getElementById("modal");
@@ -131,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 const form = document.getElementById("registroForm");
-const socket = io();
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();

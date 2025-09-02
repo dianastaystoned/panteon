@@ -37,7 +37,8 @@
                 <td><%= difunto[i].act %></td>
                 <td><%= difunto[i].num %></td>
                 <td>
-                  <button class="open-edit-btn input-fiel button full" data-id="<%= difunto[i].id %>">Editar</button>
+                  <button class="open-edit-btn input-fiel button" data-id="<%= difunto[i].id %>"><i class="uil uil-edit-alt"></i></button>
+                  <button class="open-responsible-btn input-fiel button" data-id="<%= difunto[i].id %>"><i class="uil uil-user-plus"></i></button>
                 </td>
               </tr>
               <% } %> <% } %>
@@ -53,4 +54,4 @@
 <%- include("partials/_createDifuntos") %>
 <%- include("partials/_footer") %>
 <script src="/socket.io/socket.io.js" defer></script>
-
+<script src="/js/socket-client.js"></script>

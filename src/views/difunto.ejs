@@ -1,94 +1,5 @@
 <%- include("partials/_header") %>
 
-<!-- <section class="dashboard">
-  <div class="top">
-  </div>
-
-  <div class="dash-content">
-      <div class="overview">
-          <div class="title">
-              <i class="uil uil-tachometer-fast-alt"></i>
-              <span class="text">Inicio</span>
-          </div>
-
-          <div class="boxes">
-              <div class="box box1">
-                  <i class="uil uil-"></i>
-                  <span class="text">Total de gavetas</span>
-                  <span class="number"><%= allCement %></span>
-              </div>
-              <div class="box box2">
-                  <i class="uil uil-"></i>
-                  <span class="text">Panteón nuevo</span>
-                  <span class="number"><%= newCement %></span>
-              </div>
-              <div class="box box3">
-                  <i class="uil uil-"></i>
-                  <span class="text">Panteón viejo</span>
-                  <span class="number"><%= oldCement %></span>
-              </div>
-          </div>
-      </div>
-
-    <div class="activity">
-        <div class="title">
-            <i class="uil uil-file-alt"></i>
-            <span class="text">Todos los registros</span>
-        </div>
-
-        <div class="activity-data">
-            <div class="data names">
-                <span class="data-title">N. gaveta</span>
-                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
-                  %>
-                  <span class="data-list"><%= difunto[i].id %></span>
-                <% } %> <% } %>
-            </div>
-            <div class="data email">
-              <span class="data-title">Nombre del difunto</span>
-                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
-                  %>
-                  <span class="data-list"><%= difunto[i].name %></span>
-                <% } %> <% } %>
-            </div>            
-            <div class="data joined">
-              <span class="data-title">Sección</span>
-              <% if (difunto) { %>
-                <% for(var i = 0; i < difunto.length; i++) { %>
-                  <span class="data-list"><%= difunto[i].seccion %></span>
-                <% } %>
-              <% } %>
-            </div>
-            <div class="data floors">
-              <span class="data-title">Pisos</span>
-              <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
-                %>
-                <span class="data-list"><%= difunto[i].pisos %></span>
-              <% } %> <% } %>
-            </div>
-            <div class="data type">
-                <span class="data-title">N. anterior</span>
-                <% if (difunto) { %> <% for(var i = 0; i < difunto.length; i++) {
-                  %>
-                  <span class="data-list"><%= difunto[i].num %></span>
-                <% } %> <% } %>
-            </div>
-
-            <div class="data status">
-                <span class="data-title">Fecha</span>
-                <% if (difunto) { %>
-                  <% for(var i = 0; i < difunto.length; i++) { %>
-                    <span class="data-list"><%= difunto[i].fecha %></span>
-                  <% } %>
-                <% } %>
-            </div>
-
-        </div>
-        
-    </div>
-  </div>
-</section> -->
-
 <section id="content">
   <main>
     <div class="head-title">
@@ -101,10 +12,12 @@
           </li>
         </ul>
       </div>
-      <a href="#" class="btn-download">
-        <i class='uil uil-download-alt' ></i>
-        <span class="text">Descargar PDF</span>
-      </a>
+      <div class="button-download">
+        <div class="content">
+          <i class='bx bx-cloud-download'></i>
+          <span class="button-text">Descargar Excel</span>
+        </div>
+      </div>
     </div>
   
     <ul class="box-info">
@@ -174,81 +87,83 @@
       </div>
       <div class="todo">
         <div class="head">
-          <h3>Modificados</h3>
+          <h3>Responsables</h3>
           <!-- <i class='bx bx-plus' ></i>
           <i class='bx bx-filter' ></i> -->
         </div>
-        <ul class="todo-list">
-          <% recentChanges.forEach((item) => { %>
-            <li class="completed">
-              <p><%= item.name %></p>
-              <i class="uil uil-elipsis-double-v-alt view-btn" data-id="<%= item.id %>"></i>
-            </li>
-          <% }) %>
-        </ul>        
+        
       </div>
     </div>
   </main>
 </section>
-<ul class="recent-list">
-  <% recentChanges.forEach((item, index) => { %>
-    <li>
-      <span><%= item.name %></span>
-      <button class="view-btn"  data-id="<%= item.id %>" data-index="<%= index %>">
-        <i class="uil uil-eye"></i>
-      </button>
-    </li>
-  <% }) %>
-</ul>
+
 
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="/js/inicio-socket.js"></script>
+<script src="../custom-scripts.js" defer></script>
 
 <!-- <script>
-  document.addEventListener("DOMContentLoaded", () => {
-  const socket = io();
+  const button = document.querySelector(".button-download");
+  const fileUrl = "/export-excel"; // 👈 ruta a tu controlador en Express
 
-  socket.on("connect", () => {
-    console.log("Conectado a WebSocket con ID:", socket.id);
+  button.addEventListener("click", () => {
+    // Activa animación
+    button.classList.add("active");
+
+    // Espera a que la animación termine
+    setTimeout(() => {
+      button.classList.remove("active");
+
+      // Cambia icono y texto
+      button.querySelector("i").classList.replace("uil-download-alt", "uil-check-circle");
+      button.querySelector("span").innerText = "Completado";
+
+      // ⚡ Inicia descarga con la ruta del controlador
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "difuntos.xlsx"); // 👈 nombre sugerido
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }, 2000); // ajusta al tiempo de tu animación CSS
   });
-
-  socket.on("nuevoRegistro", (data) => {
-    console.log("Datos recibidos:", data); // <-- aquí debe aparecer
-    const tbody = document.querySelector(".scroll-table tbody");
-    const tr = document.createElement("tr");
-
-    // Nombre con <p>
-    const tdNombre = document.createElement("td");
-    const pNombre = document.createElement("p");
-    pNombre.textContent = data.name;
-    tdNombre.appendChild(pNombre);
-
-    // Fecha
-    const tdFecha = document.createElement("td");
-    tdFecha.textContent = data.fecha;
-
-    // Panteón con <span> y clase dinámica
-    const tdPanteon = document.createElement("td");
-    const spanPanteon = document.createElement("span");
-    spanPanteon.textContent = data.panteon;
-    spanPanteon.className = `status ${data.panteon === "VIEJO" ? "viejo" : "nuevo"}`;
-    tdPanteon.appendChild(spanPanteon);
-
-    // Agrega todos los <td> al <tr>
-    tr.appendChild(tdNombre);
-    tr.appendChild(tdFecha);
-    tr.appendChild(tdPanteon);
-
-    // Agrega la fila al final del tbody
-    tbody.appendChild(tr);
-    document.getElementById("totalCement").textContent = data.allCement;
-    document.getElementById("newCement").textContent = data.newCement;
-    document.getElementById("oldCement").textContent = data.oldCement;
-    document.getElementById("availableCement").textContent = data.availableCement;
-
-    })
-});
 </script> -->
+<script>
+  const button = document.querySelector(".button-download");
+  const icon = button.querySelector("i");
+  const text = button.querySelector("span");
+
+  button.addEventListener("click", (e) => {
+    e.preventDefault(); // evita descarga inmediata
+    if (button.classList.contains("disabled")) return; // 🚫 evita múltiples clics
+
+    button.classList.add("active", "disabled"); // 🔒 bloquea
+    button.style.pointerEvents = "none"; // desactiva clicks
+
+    // ⏱ Espera a que termine la barra (2s en este ejemplo)
+    setTimeout(() => {
+      button.classList.remove("active");
+      icon.classList.replace("bx-cloud-download", "bx-check-circle");
+      text.innerText = "Completado";
+
+      // 👉 Dispara la descarga
+      window.location.href = "/export-excel";
+
+      // ⏱ Después de 10 segundos vuelve al estado original
+      setTimeout(() => {
+        icon.classList.replace("bx-check-circle", "bx-cloud-download");
+        text.innerText = "Descargar Excel";
+
+        // 🔓 desbloquea
+        button.classList.remove("disabled");
+        button.style.pointerEvents = "auto";
+      }, 10000);
+
+    }, 2000); // duración animación de progreso
+  });
+</script>
+
 
 
 <%- include("partials/_createDifuntos") %>

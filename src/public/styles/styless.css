@@ -815,7 +815,7 @@ body {
     padding-left: 8px; /* suficiente para no pegar al icono */
     transition: border-color 0.2s ease;
   }
-  
+
   .input-field input:focus,
   .input-field select:focus {
     border-bottom-color: #4070f4;
@@ -852,21 +852,20 @@ body {
   }
 
   .input-fiel.button {
-    background-color: #224dea;
+    background-color: var(--blue);
     color: white;
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
     height: 50px;
-    width: 100%;
+    width: 30%;
     border: none;
     font-size: 17px;
-    letter-spacing: 1px;
     transition: background-color 0.3s ease;
   }
   
   .input-fiel.button:hover {
-    background-color: #6581e9;;
+    background-color: #1646f2;;
   }
   
   /* Responsive móvil */
@@ -893,3 +892,66 @@ body {
       padding-left: 8px;
     }
   }
+
+  .button-download {
+  position: fixed;         /* para que siempre quede arriba a la derecha */
+  top: 15%;
+  right: 20px;
+  height: 45px;            /* más pequeño */
+  width: 180px;
+  background: var(--blue);
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  overflow: hidden;
+  z-index: 9999;           /* para que quede siempre encima */
+}
+
+.button-download.active {
+  height: 18px;
+  width: 200px;
+}
+
+.button-download::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  width: 100%;
+  background: var(--light-blue);
+  border-radius: 25px;
+  transition: all 2s ease-in-out;
+}
+.button-download.active::before {
+  animation: layer 2s ease-in-out forwards;
+}
+@keyframes layer {
+  100% {
+    left: 0%;
+  }
+}
+
+.button-download .content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  transition-delay: 0.2s;
+}
+.button-download.active .content {
+  transform: translateY(40px);
+}
+.button-download .content i,
+.button-download .content .button-text {
+  color: #fff;
+  font-size: 18px;      /* ícono más pequeño */
+  font-weight: 500;
+}
+.button-download .content .button-text {
+  font-size: 16px;      /* texto más chico */
+  margin-left: 6px;
+}
